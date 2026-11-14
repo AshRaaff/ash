@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Для тебя ❤</title>
+<meta property="og:title" content="Тебе сообщение ❤">
+<meta property="og:description" content="Нажми, чтобы открыть">
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 40%,#ff5e8a,#b0123f 70%,#4a0420);font-family:Georgia,"Times New Roman",serif}
+  #hearts{position:fixed;inset:0;pointer-events:none}
+  .heart{position:absolute;bottom:-60px;animation:rise linear forwards;user-select:none}
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0) scale(.6) rotate(0);opacity:0}
+    10%{opacity:1}
+    100%{transform:translateY(-115vh) translateX(var(--dx)) scale(1.1) rotate(var(--rot));opacity:0}
+  }
+  #intro,#love{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:#fff}
+  #intro{cursor:pointer;z-index:3;transition:opacity .6s}
+  #intro .big{font-size:96px;animation:beat 1s infinite}
+  #intro p{font-size:22px;margin:12px 0 0;opacity:.9}
+  #love{opacity:0;transition:opacity 1.2s;z-index:2;pointer-events:none}
+  #love h1{font-size:clamp(36px,10vw,84px);margin:0;line-height:1.15;text-shadow:0 4px 24px rgba(0,0,0,.35);animation:beat 1.4s infinite}
+  #love .sub{font-size:clamp(18px,5vw,28px);margin-top:18px;opacity:.9}
+  .show{opacity:1!important}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}}
+</style>
+</head>
+<body>
+<div id="hearts"></div>
+
+<div id="intro">
+  <div class="big">💌</div>
+  <p>Нажми, у меня для тебя сообщение</p>
+</div>
+
+<div id="love">
+  <h1>Я тебя<br>очень люблю ❤️</h1>
+  <div class="sub">Ты — самое лучшее в моей жизни</div>
+</div>
+
+<script>
+  const box = document.getElementById('hearts');
+  const emojis = ['❤️','💖','💕','💗','💘','💞','🩷'];
+
+  function spawn(){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    h.style.left = Math.random()*100 + 'vw';
+    h.style.fontSize = (18 + Math.random()*44) + 'px';
+    h.style.setProperty('--dx', (Math.random()*160-80) + 'px');
+    h.style.setProperty('--rot', (Math.random()*80-40) + 'deg');
+    h.style.animationDuration = (4 + Math.random()*5) + 's';
+    box.appendChild(h);
+    setTimeout(()=>h.remove(), 9500);
+  }
+
+  let timer = null;
+  function start(){
+    document.getElementById('intro').style.opacity = 0;
+    setTimeout(()=>document.getElementById('intro').style.display='none', 600);
+    document.getElementById('love').classList.add('show');
+    for(let i=0;i<40;i++) setTimeout(spawn, i*60);   // залп сердечек
+    timer = setInterval(spawn, 180);
+    if (navigator.vibrate) navigator.vibrate([80,60,80]);
+    // Если открыто как Telegram Mini App
+    try{ window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); }catch(e){}
+  }
+  document.getElementById('intro').addEventListener('click', start);
+
+  // Фоновые сердечки и на заставке
+  for(let i=0;i<10;i++) setTimeout(spawn, i*300);
+  setInterval(()=>{ if(!timer) spawn(); }, 700);
+</script>
+</body>
+</html>
