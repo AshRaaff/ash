@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAISON — Fashion Store</title>
+<meta name="description" content="Online fashion store: woman, man, kids.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header id="header" class="header over">
+  <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  <a href="#/" class="logo" id="logo">MAISON</a>
+  <nav class="header-right">
+    <button class="text-btn" id="searchBtn">SEARCH</button>
+    <button class="text-btn hide-m" id="loginBtn">LOG IN</button>
+    <button class="text-btn" id="cartBtn">BAG (<span id="cartCount">0</span>)</button>
+  </nav>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer left" id="menu" aria-hidden="true">
+  <button class="close" data-close aria-label="Close">✕</button>
+  <ul id="menuList"></ul>
+  <ul class="menu-small">
+    <li><a href="#/info/help">HELP</a></li>
+    <li><a href="#/info/shipping">SHIPPING &amp; RETURNS</a></li>
+    <li><a href="#/info/contact">CONTACT</a></li>
+  </ul>
+</aside>
+
+<aside class="drawer right" id="cart" aria-hidden="true">
+  <div class="drawer-head"><span>BAG</span><button class="close static" data-close aria-label="Close">✕</button></div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-foot" id="cartFoot"></div>
+</aside>
+
+<div class="search" id="search" aria-hidden="true">
+  <div class="search-top">
+    <input id="searchInput" type="text" placeholder="SEARCH" autocomplete="off">
+    <button class="close static" data-close aria-label="Close">✕</button>
+  </div>
+  <div class="grid" id="searchResults"></div>
+</div>
+
+<main id="app"></main>
+
+<footer class="footer">
+  <div class="footer-cols">
+    <div>
+      <h4>HELP</h4>
+      <a href="#/info/help">FAQ</a><a href="#/info/shipping">Shipping</a><a href="#/info/shipping">Returns</a><a href="#/info/contact">Contact</a>
+    </div>
+    <div>
+      <h4>FOLLOW US</h4>
+      <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Facebook</a><a href="#">Pinterest</a>
+    </div>
+    <div>
+      <h4>COMPANY</h4>
+      <a href="#/info/about">About us</a><a href="#/info/contact">Stores</a><a href="#/info/about">Careers</a>
+    </div>
+    <div>
+      <h4>NEWSLETTER</h4>
+      <form id="newsletter" class="nl"><input type="email" placeholder="E-mail" required><button>→</button></form>
+      <p class="muted" id="nlMsg"></p>
+    </div>
+  </div>
+  <div class="footer-bottom"><span id="year"></span> <span class="sn"></span> · ALL RIGHTS RESERVED</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
