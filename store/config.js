@@ -14,11 +14,11 @@ window.CONFIG = {
   // Картинки главной. Положите файлы в store/img/ и укажите путь, например "img/hero1.jpg".
   // Пустая строка = цветной плейсхолдер.
   hero: [
-    { img: "", tone: "#cfc7bb", title: "NEW COLLECTION", sub: "WOMAN",  link: "#/c/woman" },
-    { img: "", tone: "#2f3236", title: "ESSENTIALS",     sub: "MAN",    link: "#/c/man" }
+    { img: "", tone: "#cfc7bb", title: "NEW COLLECTION", sub: "WOMAN",  link: "#c-woman" },
+    { img: "", tone: "#2f3236", title: "ESSENTIALS",     sub: "MAN",    link: "#c-man" }
   ],
   banners: [
-    { img: "", tone: "#b9b2a6", title: "KIDS",  sub: "SPRING EDIT", link: "#/c/kids" },
-    { img: "", tone: "#8f8a80", title: "SALE",  sub: "UP TO 50% OFF", link: "#/c/sale" }
+    { img: "", tone: "#b9b2a6", title: "KIDS",  sub: "SPRING EDIT", link: "#c-kids" },
+    { img: "", tone: "#8f8a80", title: "SALE",  sub: "UP TO 50% OFF", link: "#c-sale" }
   ]
 };

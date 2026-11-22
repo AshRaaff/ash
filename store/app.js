@@ -37,7 +37,7 @@
   // ---------- cards ----------
   function card(p) {
     const second = (p.images && p.images[1]) || !p.images || !p.images.length;
-    return `<a class="card" href="#/p/${p.id}">
+    return `<a class="card" href="#p-${p.id}">
       ${p.isNew ? '<span class="badge">NEW</span>' : p.oldPrice ? '<span class="badge">SALE</span>' : ""}
       <div class="ph"><div class="layer a">${innerMedia(p, 0)}</div>${second ? `<div class="layer b">${innerMedia(p, 1)}</div>` : ""}</div>
       <div class="info"><span>${esc(p.name)}</span><span class="p">${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span><span class="sale">${money(p.price)}</span>` : money(p.price)}</span></div>
@@ -59,7 +59,7 @@
     const featured = P.filter(p => p.isNew).slice(0, 8);
     app.innerHTML = `
       <section class="hero">${C.hero.map(t => tile(t)).join("")}</section>
-      <div class="section-title"><span>NEW IN</span><a href="#/c/new">VIEW ALL</a></div>
+      <div class="section-title"><span>NEW IN</span><a href="#c-new">VIEW ALL</a></div>
       <section class="grid">${featured.map(card).join("")}</section>
       <section class="banners" style="margin-top:56px">${C.banners.map(t => tile(t)).join("")}</section>`;
   }
@@ -89,7 +89,7 @@
     app.innerHTML = `<div class="product">
       <div class="gallery">${[0, 1, 2, 3].map(i => media(p, i)).join("")}</div>
       <div class="pinfo">
-        <div class="crumbs"><a href="#/">HOME</a> / <a href="#/c/${p.cat}">${esc(cat ? cat.label : p.cat)}</a></div>
+        <div class="crumbs"><a href="#home">HOME</a> / <a href="#c-${p.cat}">${esc(cat ? cat.label : p.cat)}</a></div>
         <h1>${esc(p.name)}</h1>
         <div class="price">${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span><span class="sale">${money(p.price)}</span>` : money(p.price)}</div>
         <p class="desc">${esc(p.desc)}</p>
@@ -124,7 +124,7 @@
 
   // ---------- router ----------
   function route() {
-    const [a, b] = location.hash.replace(/^#\/?/, "").split("/");
+    const h = location.hash.replace(/^#/, ""), i = h.indexOf("-"), a = i < 0 ? h : h.slice(0, i), b = i < 0 ? "" : h.slice(i + 1);
     closeAll();
     ({ p: () => product(b), c: () => catalog(b), info: () => info(b) }[a] || home)();
     window.scrollTo(0, 0);
@@ -161,7 +161,7 @@
     $("#cartCount").textContent = count;
     const rows = cart.map((it, idx) => ({ ...it, idx, p: P.find(p => p.id === it.id) })).filter(r => r.p);
     $("#cartBody").innerHTML = rows.length ? rows.map(r => `<div class="cart-item">
-      <a href="#/p/${r.p.id}">${media(r.p, 0).replace('class="ph "', 'class="ph"')}</a>
+      <a href="#p-${r.p.id}">${media(r.p, 0).replace('class="ph "', 'class="ph"')}</a>
       <div><h5>${esc(r.p.name)} <span class="pr">${money(r.p.price * r.qty)}</span></h5>
       <div class="meta">${esc(r.p.colors[0])} · ${esc(r.size)}</div>
       <div class="qty"><button data-d="-1" data-i="${r.idx}" aria-label="Less">−</button><span>${r.qty}</span><button data-d="1" data-i="${r.idx}" aria-label="More">+</button></div>
@@ -198,6 +198,6 @@
   $("#logo").textContent = C.storeName;
   $$(".sn").forEach(e => e.textContent = C.storeName);
   $("#year").textContent = "© " + new Date().getFullYear();
-  $("#menuList").innerHTML = C.categories.map(c => `<li><a href="#/c/${c.id}">${esc(c.label)}</a></li>`).join("");
+  $("#menuList").innerHTML = C.categories.map(c => `<li><a href="#c-${c.id}">${esc(c.label)}</a></li>`).join("");
   renderCart(); route();
 })();
