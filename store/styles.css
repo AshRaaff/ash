@@ -72,13 +72,14 @@ img{display:block;max-width:100%}
 .section-title a{text-decoration:underline;text-underline-offset:4px}
 
 /* grid + cards */
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px 2px}
-.card{position:relative;display:block;padding-bottom:36px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
+.card{position:relative;display:block;min-width:0;padding-bottom:28px;background:#fff}
 .card .ph{aspect-ratio:3/4;overflow:hidden;position:relative}
 .card .ph .layer{position:absolute;inset:0;transition:opacity .4s}
 .card .ph .layer.b{opacity:0}
 .card:hover .ph .layer.b{opacity:1}
-.card .info{padding:10px 12px 0;display:flex;justify-content:space-between;gap:12px;font-size:11px;text-transform:uppercase}
+.card .info{padding:10px 12px 0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:4px 12px;font-size:11px;line-height:1.35;text-transform:uppercase}
+.card .info>span:first-child{overflow-wrap:anywhere}
 .card .info .p{white-space:nowrap}
 .card .info .old{color:var(--muted);text-decoration:line-through;margin-right:6px}
 .card .info .sale{color:#c1121f}
@@ -97,7 +98,7 @@ img{display:block;max-width:100%}
 
 /* product */
 .product{display:grid;grid-template-columns:1fr 420px;gap:0;padding-top:var(--hh)}
-.gallery{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.gallery{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2px}
 .gallery .ph{aspect-ratio:3/4}
 .gallery .ph:first-child{grid-column:1/-1}
 .pinfo{position:sticky;top:var(--hh);align-self:start;padding:32px;display:grid;gap:18px;height:calc(100vh - var(--hh));overflow:auto}
@@ -135,7 +136,7 @@ img{display:block;max-width:100%}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
 @media (max-width:1000px){
-  .grid{grid-template-columns:repeat(3,1fr)}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .product{grid-template-columns:1fr}
   .pinfo{position:static;height:auto}
   .footer-cols{grid-template-columns:1fr 1fr}
@@ -145,7 +146,9 @@ img{display:block;max-width:100%}
   .hide-m{display:none}
   .logo{font-size:20px}
   .header-right{gap:14px}
-  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card .info{grid-template-columns:minmax(0,1fr);padding:8px 10px 0}
+  .card .info .p{white-space:normal}
   .hero,.banners{grid-template-columns:1fr}
   .hero{height:auto}.hero .tile{height:70vh}
   .banners{height:auto}.banners .tile{height:55vh}
