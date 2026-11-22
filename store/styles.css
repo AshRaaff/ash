@@ -152,3 +152,9 @@ img{display:block;max-width:100%}
   .gallery{grid-template-columns:1fr}
   .catalog-head{flex-direction:column;align-items:flex-start;gap:12px}
 }
+
+/* language switch */
+.lang [data-setlang],.lang-row [data-setlang]{cursor:pointer;opacity:.5}
+[data-setlang].act{opacity:1;font-weight:700}
+.lang-row{display:flex;gap:16px;font-size:12px}
+.lang-row [data-setlang]{padding:4px 0}

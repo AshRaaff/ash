@@ -5,6 +5,43 @@
   const money = n => n.toFixed(2) + " " + C.currency;
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+  // ---------- i18n ----------
+  const UK = window.PRODUCTS_UK || {};
+  const STR = {
+    en: { search:"SEARCH", login:"LOG IN", bag:"BAG", help:"HELP", shipRet:"SHIPPING & RETURNS", contact:"CONTACT",
+      faq:"FAQ", shipping:"Shipping", returns:"Returns", contactL:"Contact", follow:"FOLLOW US", company:"COMPANY", about:"About us",
+      stores:"Stores", careers:"Careers", newsletter:"NEWSLETTER", email:"E-mail", rights:"ALL RIGHTS RESERVED", thanks:"Thank you for subscribing.",
+      view:"VIEW", viewAll:"VIEW ALL", newIn:"NEW IN", sort:"SORT", featured:"FEATURED", priceUp:"PRICE ↑", priceDown:"PRICE ↓", nothing:"Nothing here yet.",
+      home:"HOME", selectSize:"SELECT YOUR SIZE", add:"ADD", pickSize:"PLEASE SELECT A SIZE",
+      shipNote:"Free shipping on orders over {free}. Free returns within 30 days.",
+      empty:"YOUR BAG IS EMPTY", total:"TOTAL", freeIncl:"Free shipping included.", addMore:"Add {n} more for free shipping.", cont:"CONTINUE", remove:"Remove",
+      noResults:"No results.", loginToast:"LOGIN IS NOT CONNECTED YET", checkoutToast:"CHECKOUT & PAYMENT: TO BE CONNECTED", titleSuffix:"Fashion Store",
+      info:{ help:["HELP","Questions about orders, sizes or payment? Write to us and we will reply within one business day."],
+        shipping:["SHIPPING & RETURNS","Standard delivery takes 2–4 business days. Free shipping over {free}. You can return any item within 30 days in its original condition."],
+        contact:["CONTACT","E-mail: {mail}. Replace this text with your address, phone and opening hours."],
+        about:["ABOUT US","Write a few lines about your store, your story and your values here."] } },
+    uk: { search:"ПОШУК", login:"УВІЙТИ", bag:"КОШИК", help:"ДОПОМОГА", shipRet:"ДОСТАВКА ТА ПОВЕРНЕННЯ", contact:"КОНТАКТИ",
+      faq:"Часті питання", shipping:"Доставка", returns:"Повернення", contactL:"Контакти", follow:"МИ В СОЦМЕРЕЖАХ", company:"КОМПАНІЯ", about:"Про нас",
+      stores:"Магазини", careers:"Вакансії", newsletter:"РОЗСИЛКА", email:"Електронна пошта", rights:"УСІ ПРАВА ЗАХИЩЕНО", thanks:"Дякуємо за підписку.",
+      view:"ДИВИТИСЬ", viewAll:"УСІ ТОВАРИ", newIn:"НОВИНКИ", sort:"СОРТУВАННЯ", featured:"ЗА ЗАМОВЧУВАННЯМ", priceUp:"ЦІНА ↑", priceDown:"ЦІНА ↓", nothing:"Тут поки нічого немає.",
+      home:"ГОЛОВНА", selectSize:"ОБЕРІТЬ РОЗМІР", add:"ДОДАТИ", pickSize:"БУДЬ ЛАСКА, ОБЕРІТЬ РОЗМІР",
+      shipNote:"Безкоштовна доставка від {free}. Безкоштовне повернення протягом 30 днів.",
+      empty:"ВАШ КОШИК ПОРОЖНІЙ", total:"РАЗОМ", freeIncl:"Доставка безкоштовна.", addMore:"Додайте ще {n} для безкоштовної доставки.", cont:"ПРОДОВЖИТИ", remove:"Видалити",
+      noResults:"Нічого не знайдено.", loginToast:"ВХІД ЩЕ НЕ ПІДКЛЮЧЕНО", checkoutToast:"ОФОРМЛЕННЯ ТА ОПЛАТА: БУДЕ ПІДКЛЮЧЕНО", titleSuffix:"Магазин одягу",
+      info:{ help:["ДОПОМОГА","Питання щодо замовлень, розмірів чи оплати? Напишіть нам, і ми відповімо протягом одного робочого дня."],
+        shipping:["ДОСТАВКА ТА ПОВЕРНЕННЯ","Стандартна доставка триває 2–4 робочі дні. Безкоштовна доставка від {free}. Будь-який товар можна повернути протягом 30 днів в оригінальному стані."],
+        contact:["КОНТАКТИ","Електронна пошта: {mail}. Замініть цей текст на вашу адресу, телефон і години роботи."],
+        about:["ПРО НАС","Напишіть кілька рядків про ваш магазин, історію та цінності."] } }
+  };
+  const LANGS = C.languages || ["en", "uk"];
+  let lang = "en";
+  try { const s = localStorage.getItem("lang"); lang = LANGS.includes(s) ? s : (navigator.language || "").toLowerCase().startsWith("uk") ? "uk" : "en"; } catch {}
+  const T = k => (STR[lang] && STR[lang][k]) ?? STR.en[k] ?? k;
+  const L = x => (x && typeof x === "object") ? (x[lang] ?? x.en) : x;
+  const pn = p => (lang === "uk" && UK[p.id] && UK[p.id].name) || p.name;
+  const pd = p => (lang === "uk" && UK[p.id] && UK[p.id].desc) || p.desc;
+  const pc = p => (lang === "uk" && UK[p.id] && UK[p.id].colors) || p.colors;
+
   // ---------- storage ----------
   const store = {
     get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
@@ -40,7 +77,7 @@
     return `<a class="card" href="#p-${p.id}">
       ${p.isNew ? '<span class="badge">NEW</span>' : p.oldPrice ? '<span class="badge">SALE</span>' : ""}
       <div class="ph"><div class="layer a">${innerMedia(p, 0)}</div>${second ? `<div class="layer b">${innerMedia(p, 1)}</div>` : ""}</div>
-      <div class="info"><span>${esc(p.name)}</span><span class="p">${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span><span class="sale">${money(p.price)}</span>` : money(p.price)}</span></div>
+      <div class="info"><span>${esc(pn(p))}</span><span class="p">${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span><span class="sale">${money(p.price)}</span>` : money(p.price)}</span></div>
     </a>`;
   }
   function innerMedia(p, i) {
@@ -49,7 +86,7 @@
   }
   const tile = (t, cls = "") => `<a class="tile ${cls}" href="${t.link}">
     <div class="bg" style="background-color:${t.tone};${t.img ? `background-image:url('${esc(t.img)}')` : `background-image:linear-gradient(180deg,rgba(255,255,255,.08),rgba(0,0,0,.28))`}"></div>
-    <div class="cap"><small>${esc(t.sub)}</small><b>${esc(t.title)}</b><u>VIEW</u></div></a>`;
+    <div class="cap"><small>${esc(L(t.sub))}</small><b>${esc(L(t.title))}</b><u>${T("view")}</u></div></a>`;
 
   // ---------- views ----------
   const app = $("#app"), header = $("#header");
@@ -59,7 +96,7 @@
     const featured = P.filter(p => p.isNew).slice(0, 8);
     app.innerHTML = `
       <section class="hero">${C.hero.map(t => tile(t)).join("")}</section>
-      <div class="section-title"><span>NEW IN</span><a href="#c-new">VIEW ALL</a></div>
+      <div class="section-title"><span>${T("newIn")}</span><a href="#c-new">${T("viewAll")}</a></div>
       <section class="grid">${featured.map(card).join("")}</section>
       <section class="banners" style="margin-top:56px">${C.banners.map(t => tile(t)).join("")}</section>`;
   }
@@ -67,15 +104,16 @@
   function catalog(id = "new") {
     setHeader(false);
     const cat = C.categories.find(c => c.id === id) || { id, label: id.toUpperCase() };
+    const label = L(cat.label);
     let list = P.filter(p => id === "new" ? p.isNew : id === "sale" ? p.oldPrice : p.cat === id);
     app.innerHTML = `<div class="page">
-      <div class="catalog-head"><h1>${esc(cat.label)} <span class="muted">· <span id="cnt">${list.length}</span></span></h1>
-      <div class="filters"><label>SORT <select id="sort"><option value="">FEATURED</option><option value="asc">PRICE ↑</option><option value="desc">PRICE ↓</option></select></label></div></div>
+      <div class="catalog-head"><h1>${esc(label)} <span class="muted">· <span id="cnt">${list.length}</span></span></h1>
+      <div class="filters"><label>${T("sort")} <select id="sort"><option value="">${T("featured")}</option><option value="asc">${T("priceUp")}</option><option value="desc">${T("priceDown")}</option></select></label></div></div>
       <div class="grid" id="list"></div></div>`;
     const draw = () => {
       const v = $("#sort").value;
       const l = [...list].sort((a, b) => v === "asc" ? a.price - b.price : v === "desc" ? b.price - a.price : 0);
-      $("#list").innerHTML = l.length ? l.map(card).join("") : `<div class="empty" style="grid-column:1/-1">Nothing here yet.</div>`;
+      $("#list").innerHTML = l.length ? l.map(card).join("") : `<div class="empty" style="grid-column:1/-1">${T("nothing")}</div>`;
     };
     $("#sort").onchange = draw; draw();
   }
@@ -89,51 +127,45 @@
     app.innerHTML = `<div class="product">
       <div class="gallery">${[0, 1, 2, 3].map(i => media(p, i)).join("")}</div>
       <div class="pinfo">
-        <div class="crumbs"><a href="#home">HOME</a> / <a href="#c-${p.cat}">${esc(cat ? cat.label : p.cat)}</a></div>
-        <h1>${esc(p.name)}</h1>
+        <div class="crumbs"><a href="#home">${T("home")}</a> / <a href="#c-${p.cat}">${esc(cat ? L(cat.label) : p.cat)}</a></div>
+        <h1>${esc(pn(p))}</h1>
         <div class="price">${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span><span class="sale">${money(p.price)}</span>` : money(p.price)}</div>
-        <p class="desc">${esc(p.desc)}</p>
-        <div class="color">${esc(p.colors.join(" | "))}</div>
-        <div><div class="muted" style="margin-bottom:8px">SELECT YOUR SIZE</div>
+        <p class="desc">${esc(pd(p))}</p>
+        <div class="color">${esc(pc(p).join(" | "))}</div>
+        <div><div class="muted" style="margin-bottom:8px">${T("selectSize")}</div>
         <div class="sizes">${p.sizes.map(s => `<button data-s="${esc(s)}">${esc(s)}</button>`).join("")}</div></div>
-        <button class="btn" id="add">ADD</button>
-        <div class="shipinfo">Free shipping on orders over ${money(C.freeShippingFrom)}. Free returns within 30 days.</div>
+        <button class="btn" id="add">${T("add")}</button>
+        <div class="shipinfo">${T("shipNote").replace("{free}", money(C.freeShippingFrom))}</div>
       </div></div>`;
     $$(".sizes button").forEach(b => b.onclick = () => {
       $$(".sizes button").forEach(x => x.classList.remove("sel")); b.classList.add("sel"); size = b.dataset.s;
     });
     $("#add").onclick = () => {
-      if (!size) { toast("PLEASE SELECT A SIZE"); return; }
+      if (!size) { toast(T("pickSize")); return; }
       const it = cart.find(c => c.id === p.id && c.size === size);
       it ? it.qty++ : cart.push({ id: p.id, size, qty: 1 });
       saveCart(); openDrawer("cart");
     };
   }
 
-  const INFO = {
-    help: ["HELP", "Questions about orders, sizes or payment? Write to us and we will reply within one business day."],
-    shipping: ["SHIPPING & RETURNS", "Standard delivery takes 2–4 business days. Free shipping over " + "{free}" + ". You can return any item within 30 days in its original condition."],
-    contact: ["CONTACT", "E-mail: {mail}. Replace this text with your address, phone and opening hours."],
-    about: ["ABOUT US", "Write a few lines about your store, your story and your values here."]
-  };
   function info(k) {
     setHeader(false);
-    const [t, txt] = INFO[k] || INFO.about;
+    const [t, txt] = STR[lang].info[k] || STR[lang].info.about;
     app.innerHTML = `<div class="info-page"><h1>${t}</h1><p>${esc(txt.replace("{free}", money(C.freeShippingFrom)).replace("{mail}", C.email))}</p></div>`;
   }
 
   // ---------- router ----------
-  function route() {
+  function route(keepScroll) {
     const h = location.hash.replace(/^#/, ""), i = h.indexOf("-"), a = i < 0 ? h : h.slice(0, i), b = i < 0 ? "" : h.slice(i + 1);
     closeAll();
     ({ p: () => product(b), c: () => catalog(b), info: () => info(b) }[a] || home)();
-    window.scrollTo(0, 0);
+    if (keepScroll !== true) window.scrollTo(0, 0);
     onScroll();
   }
   function setHeader(over) { header.classList.toggle("over", over); }
   function onScroll() { header.classList.toggle("scrolled", scrollY > window.innerHeight * .6 - 56 || !header.classList.contains("over")); }
   addEventListener("scroll", onScroll, { passive: true });
-  addEventListener("hashchange", route);
+  addEventListener("hashchange", () => route());
 
   // ---------- drawers ----------
   const overlay = $("#overlay");
@@ -150,7 +182,7 @@
   $("#menuBtn").onclick = () => openDrawer("menu");
   $("#cartBtn").onclick = () => openDrawer("cart");
   $("#searchBtn").onclick = () => openDrawer("search");
-  $("#loginBtn").onclick = () => toast("LOGIN IS NOT CONNECTED YET");
+  $("#loginBtn").onclick = () => toast(T("loginToast"));
   overlay.onclick = closeAll;
   $$("[data-close]").forEach(b => b.onclick = closeAll);
   addEventListener("keydown", e => e.key === "Escape" && closeAll());
@@ -162,17 +194,17 @@
     const rows = cart.map((it, idx) => ({ ...it, idx, p: P.find(p => p.id === it.id) })).filter(r => r.p);
     $("#cartBody").innerHTML = rows.length ? rows.map(r => `<div class="cart-item">
       <a href="#p-${r.p.id}">${media(r.p, 0).replace('class="ph "', 'class="ph"')}</a>
-      <div><h5>${esc(r.p.name)} <span class="pr">${money(r.p.price * r.qty)}</span></h5>
-      <div class="meta">${esc(r.p.colors[0])} · ${esc(r.size)}</div>
+      <div><h5>${esc(pn(r.p))} <span class="pr">${money(r.p.price * r.qty)}</span></h5>
+      <div class="meta">${esc(pc(r.p)[0])} · ${esc(r.size)}</div>
       <div class="qty"><button data-d="-1" data-i="${r.idx}" aria-label="Less">−</button><span>${r.qty}</span><button data-d="1" data-i="${r.idx}" aria-label="More">+</button></div>
-      <button class="rm" data-rm="${r.idx}">Remove</button></div></div>`).join("")
-      : `<div class="cart-empty">YOUR BAG IS EMPTY</div>`;
+      <button class="rm" data-rm="${r.idx}">${T("remove")}</button></div></div>`).join("")
+      : `<div class="cart-empty">${T("empty")}</div>`;
     const total = rows.reduce((s, r) => s + r.p.price * r.qty, 0);
     $("#cartFoot").innerHTML = rows.length ? `
-      <div class="row"><span>TOTAL</span><b>${money(total)}</b></div>
-      <div class="note">${total >= C.freeShippingFrom ? "Free shipping included." : `Add ${money(C.freeShippingFrom - total)} more for free shipping.`}</div>
-      <button class="btn" id="checkout">CONTINUE</button>` : "";
-    const co = $("#checkout"); if (co) co.onclick = () => toast("CHECKOUT & PAYMENT: TO BE CONNECTED");
+      <div class="row"><span>${T("total")}</span><b>${money(total)}</b></div>
+      <div class="note">${total >= C.freeShippingFrom ? T("freeIncl") : T("addMore").replace("{n}", money(C.freeShippingFrom - total))}</div>
+      <button class="btn" id="checkout">${T("cont")}</button>` : "";
+    const co = $("#checkout"); if (co) co.onclick = () => toast(T("checkoutToast"));
   }
   $("#cartBody").addEventListener("click", e => {
     const t = e.target.closest("button"); if (!t) return;
@@ -184,20 +216,38 @@
   // ---------- search ----------
   $("#searchInput").addEventListener("input", e => {
     const q = e.target.value.trim().toLowerCase();
-    const res = q ? P.filter(p => (p.name + " " + p.cat + " " + p.colors.join(" ")).toLowerCase().includes(q)) : [];
-    $("#searchResults").innerHTML = q && !res.length ? `<div class="empty" style="grid-column:1/-1">No results.</div>` : res.map(card).join("");
+    const res = q ? P.filter(p => (pn(p) + " " + p.name + " " + p.cat + " " + pc(p).join(" ")).toLowerCase().includes(q)) : [];
+    $("#searchResults").innerHTML = q && !res.length ? `<div class="empty" style="grid-column:1/-1">${T("noResults")}</div>` : res.map(card).join("");
   });
   $("#searchResults").addEventListener("click", e => e.target.closest("a") && closeAll());
 
   // ---------- misc ----------
   let tt; function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2400); }
-  $("#newsletter").onsubmit = e => { e.preventDefault(); $("#nlMsg").textContent = "Thank you for subscribing."; e.target.reset(); };
+  $("#newsletter").onsubmit = e => { e.preventDefault(); $("#nlMsg").textContent = T("thanks"); e.target.reset(); };
+
+  // ---------- language ----------
+  function applyLang(keepScroll) {
+    document.documentElement.lang = lang === "uk" ? "uk" : "en";
+    document.title = C.storeName + " — " + T("titleSuffix");
+    $$("[data-i18n]").forEach(e => e.textContent = T(e.dataset.i18n));
+    $$("[data-i18n-ph]").forEach(e => e.placeholder = T(e.dataset.i18nPh));
+    $$("[data-setlang]").forEach(e => { e.classList.toggle("act", e.dataset.setlang === lang); e.style.display = LANGS.includes(e.dataset.setlang) ? "" : "none"; });
+    $("#menuList").innerHTML = C.categories.map(c => `<li><a href="#c-${c.id}">${esc(L(c.label))}</a></li>`).join("");
+    $("#nlMsg").textContent = "";
+    renderCart();
+    route(keepScroll);
+    $("#searchInput").dispatchEvent(new Event("input"));
+  }
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-setlang]"); if (!b) return;
+    lang = b.dataset.setlang;
+    try { localStorage.setItem("lang", lang); } catch {}
+    applyLang(true);
+  });
 
   // ---------- init ----------
-  document.title = C.storeName + " — Fashion Store";
   $("#logo").textContent = C.storeName;
   $$(".sn").forEach(e => e.textContent = C.storeName);
   $("#year").textContent = "© " + new Date().getFullYear();
-  $("#menuList").innerHTML = C.categories.map(c => `<li><a href="#c-${c.id}">${esc(c.label)}</a></li>`).join("");
-  renderCart(); route();
+  applyLang();
 })();

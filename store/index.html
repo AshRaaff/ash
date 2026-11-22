@@ -13,9 +13,10 @@
   <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
   <a href="#home" class="logo" id="logo">MAISON</a>
   <nav class="header-right">
-    <button class="text-btn" id="searchBtn">SEARCH</button>
-    <button class="text-btn hide-m" id="loginBtn">LOG IN</button>
-    <button class="text-btn" id="cartBtn">BAG (<span id="cartCount">0</span>)</button>
+    <button class="text-btn lang hide-m"><span data-setlang="en">EN</span> / <span data-setlang="uk">UA</span></button>
+    <button class="text-btn" id="searchBtn" data-i18n="search">SEARCH</button>
+    <button class="text-btn hide-m" id="loginBtn" data-i18n="login">LOG IN</button>
+    <button class="text-btn" id="cartBtn"><span data-i18n="bag">BAG</span> (<span id="cartCount">0</span>)</button>
   </nav>
 </header>
 
@@ -25,21 +26,22 @@
   <button class="close" data-close aria-label="Close">✕</button>
   <ul id="menuList"></ul>
   <ul class="menu-small">
-    <li><a href="#info-help">HELP</a></li>
-    <li><a href="#info-shipping">SHIPPING &amp; RETURNS</a></li>
-    <li><a href="#info-contact">CONTACT</a></li>
+    <li><a href="#info-help" data-i18n="help">HELP</a></li>
+    <li><a href="#info-shipping" data-i18n="shipRet">SHIPPING &amp; RETURNS</a></li>
+    <li><a href="#info-contact" data-i18n="contact">CONTACT</a></li>
+    <li class="lang-row"><span data-setlang="en">EN</span> <span data-setlang="uk">UA</span></li>
   </ul>
 </aside>
 
 <aside class="drawer right" id="cart" aria-hidden="true">
-  <div class="drawer-head"><span>BAG</span><button class="close static" data-close aria-label="Close">✕</button></div>
+  <div class="drawer-head"><span data-i18n="bag">BAG</span><button class="close static" data-close aria-label="Close">✕</button></div>
   <div class="cart-body" id="cartBody"></div>
   <div class="cart-foot" id="cartFoot"></div>
 </aside>
 
 <div class="search" id="search" aria-hidden="true">
   <div class="search-top">
-    <input id="searchInput" type="text" placeholder="SEARCH" autocomplete="off">
+    <input id="searchInput" type="text" data-i18n-ph="search" placeholder="SEARCH" autocomplete="off">
     <button class="close static" data-close aria-label="Close">✕</button>
   </div>
   <div class="grid" id="searchResults"></div>
@@ -50,24 +52,24 @@
 <footer class="footer">
   <div class="footer-cols">
     <div>
-      <h4>HELP</h4>
-      <a href="#info-help">FAQ</a><a href="#info-shipping">Shipping</a><a href="#info-shipping">Returns</a><a href="#info-contact">Contact</a>
+      <h4 data-i18n="help">HELP</h4>
+      <a href="#info-help" data-i18n="faq">FAQ</a><a href="#info-shipping" data-i18n="shipping">Shipping</a><a href="#info-shipping" data-i18n="returns">Returns</a><a href="#info-contact" data-i18n="contactL">Contact</a>
     </div>
     <div>
-      <h4>FOLLOW US</h4>
+      <h4 data-i18n="follow">FOLLOW US</h4>
       <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Facebook</a><a href="#">Pinterest</a>
     </div>
     <div>
-      <h4>COMPANY</h4>
-      <a href="#info-about">About us</a><a href="#info-contact">Stores</a><a href="#info-about">Careers</a>
+      <h4 data-i18n="company">COMPANY</h4>
+      <a href="#info-about" data-i18n="about">About us</a><a href="#info-contact" data-i18n="stores">Stores</a><a href="#info-about" data-i18n="careers">Careers</a>
     </div>
     <div>
-      <h4>NEWSLETTER</h4>
-      <form id="newsletter" class="nl"><input type="email" placeholder="E-mail" required><button>→</button></form>
+      <h4 data-i18n="newsletter">NEWSLETTER</h4>
+      <form id="newsletter" class="nl"><input type="email" data-i18n-ph="email" placeholder="E-mail" required><button>→</button></form>
       <p class="muted" id="nlMsg"></p>
     </div>
   </div>
-  <div class="footer-bottom"><span id="year"></span> <span class="sn"></span> · ALL RIGHTS RESERVED</div>
+  <div class="footer-bottom"><span id="year"></span> <span class="sn"></span> · <span data-i18n="rights">ALL RIGHTS RESERVED</span></div>
 </footer>
 
 <div class="toast" id="toast"></div>
