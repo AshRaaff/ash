@@ -1,7 +1,7 @@
 // ====== НАСТРОЙКИ МАГАЗИНА — меняйте здесь ======
 window.CONFIG = {
   languages: ["en", "uk"],        // доступные языки
-  storeName: "MAISON",            // название / логотип
+  storeName: "POI Shopping",      // название (логотип в шапке рисуется в index.html)
   currency: "RON",                // валюта
   freeShippingFrom: 250,          // бесплатная доставка от этой суммы
   email: "hello@example.com",

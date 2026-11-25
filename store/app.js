@@ -246,7 +246,6 @@
   });
 
   // ---------- init ----------
-  $("#logo").textContent = C.storeName;
   $$(".sn").forEach(e => e.textContent = C.storeName);
   $("#year").textContent = "© " + new Date().getFullYear();
   applyLang();
