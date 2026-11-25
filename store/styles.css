@@ -162,3 +162,18 @@ img{display:block;max-width:100%}
 [data-setlang].act{opacity:1;font-weight:700}
 .lang-row{display:flex;gap:16px;font-size:12px}
 .lang-row [data-setlang]{padding:4px 0}
+
+/* auth */
+.menu-link{font:inherit;letter-spacing:inherit;text-transform:uppercase;padding:0;text-align:left}
+.auth-form{display:grid;gap:20px;padding:20px 0 8px}
+.auth-form label{display:grid;gap:4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.auth-form input{font:inherit;font-size:16px;letter-spacing:0;text-transform:none;color:#000;border:0;border-bottom:1px solid #000;border-radius:0;padding:8px 0;outline:0;background:none;width:100%}
+.auth-form input:focus{border-bottom-width:2px;padding-bottom:7px}
+.auth-msg{min-height:1.4em;font-size:12px;line-height:1.4;color:#c1121f}
+.auth-msg.ok{color:#0a7a3d}
+.auth-alt{display:grid;gap:12px;padding-top:6px}
+.linkbtn{text-decoration:underline;text-underline-offset:3px;font-size:11px;text-align:left;color:var(--muted);justify-self:start}
+.auth-note{font-size:11px;line-height:1.5;color:var(--muted);padding-top:14px;border-top:1px solid var(--line);margin-top:20px}
+.auth-hello{font-size:18px;margin:28px 0 4px}
+.auth-h{font-weight:400;font-size:11px;letter-spacing:.12em;margin:28px 0 8px}
+.auth-account .btn{margin-top:28px}

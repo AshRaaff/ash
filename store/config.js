@@ -5,6 +5,11 @@ window.CONFIG = {
   currency: "RON",                // валюта
   freeShippingFrom: 250,          // бесплатная доставка от этой суммы
   email: "hello@example.com",
+  auth: {                         // вход и регистрация
+    provider: "local",            // "local" = демо в браузере; "supabase" = настоящие аккаунты
+    supabaseUrl: "",              // https://xxxx.supabase.co
+    supabaseAnonKey: ""           // публичный anon-ключ проекта
+  },
   categories: [                   // пункты меню
     { id: "new",   label: { en: "NEW IN", uk: "НОВИНКИ" } },
     { id: "woman", label: { en: "WOMAN",  uk: "ЖІНКАМ" } },

@@ -33,6 +33,23 @@
         contact:["КОНТАКТИ","Електронна пошта: {mail}. Замініть цей текст на вашу адресу, телефон і години роботи."],
         about:["ПРО НАС","Напишіть кілька рядків про ваш магазин, історію та цінності."] } }
   };
+  const AUTH_STR = {
+    en: { account:"ACCOUNT", register:"REGISTER", resetTitle:"RESET PASSWORD", name:"Name", password:"Password", forgot:"Forgot password?", submitLogin:"LOG IN", submitReg:"CREATE ACCOUNT",
+      submitReset:"SEND LINK", noAcc:"Don't have an account?", haveAcc:"Already have an account?", back:"Back to log in", logout:"LOG OUT", hello:"Hello, {n}",
+      myOrders:"MY ORDERS", noOrders:"You have no orders yet.", demoNote:"Demo mode: accounts are stored only in this browser and are not protected. Connect a server before real customers sign up.",
+      loggedIn:"WELCOME", loggedOut:"YOU HAVE LOGGED OUT", created:"ACCOUNT CREATED", resetSent:"If this e-mail exists, we sent a reset link.",
+      e_badEmail:"Enter a valid e-mail.", e_shortPass:"Password must be at least 8 characters.", e_exists:"An account with this e-mail already exists.",
+      e_wrong:"Wrong e-mail or password.", e_net:"Connection error. Please try again.", e_resetDemo:"Password reset is not available in demo mode.",
+      e_confirmEmail:"Check your e-mail and confirm your account, then log in." },
+    uk: { account:"АКАУНТ", register:"РЕЄСТРАЦІЯ", resetTitle:"СКИДАННЯ ПАРОЛЯ", name:"Ім'я", password:"Пароль", forgot:"Забули пароль?", submitLogin:"УВІЙТИ", submitReg:"СТВОРИТИ АКАУНТ",
+      submitReset:"НАДІСЛАТИ ПОСИЛАННЯ", noAcc:"Ще немає акаунта?", haveAcc:"Вже є акаунт?", back:"Назад до входу", logout:"ВИЙТИ", hello:"Вітаємо, {n}",
+      myOrders:"МОЇ ЗАМОВЛЕННЯ", noOrders:"У вас ще немає замовлень.", demoNote:"Демо-режим: акаунти зберігаються лише в цьому браузері й не захищені. Підключіть сервер до того, як реєструватимуться справжні клієнти.",
+      loggedIn:"ЛАСКАВО ПРОСИМО", loggedOut:"ВИ ВИЙШЛИ З АКАУНТА", created:"АКАУНТ СТВОРЕНО", resetSent:"Якщо така пошта існує, ми надіслали посилання для скидання.",
+      e_badEmail:"Введіть коректну електронну адресу.", e_shortPass:"Пароль має містити щонайменше 8 символів.", e_exists:"Акаунт з такою поштою вже існує.",
+      e_wrong:"Невірна пошта або пароль.", e_net:"Помилка з'єднання. Спробуйте ще раз.", e_resetDemo:"У демо-режимі скидання пароля недоступне.",
+      e_confirmEmail:"Перевірте пошту й підтвердьте акаунт, потім увійдіть." }
+  };
+  Object.assign(STR.en, AUTH_STR.en); Object.assign(STR.uk, AUTH_STR.uk);
   const LANGS = C.languages || ["en", "uk"];
   let lang = "en";
   try { const s = localStorage.getItem("lang"); lang = LANGS.includes(s) ? s : (navigator.language || "").toLowerCase().startsWith("uk") ? "uk" : "en"; } catch {}
@@ -182,7 +199,8 @@
   $("#menuBtn").onclick = () => openDrawer("menu");
   $("#cartBtn").onclick = () => openDrawer("cart");
   $("#searchBtn").onclick = () => openDrawer("search");
-  $("#loginBtn").onclick = () => toast(T("loginToast"));
+  $("#loginBtn").onclick = () => openAuth("login");
+  $("#menuLogin").onclick = () => openAuth("login");
   overlay.onclick = closeAll;
   $$("[data-close]").forEach(b => b.onclick = closeAll);
   addEventListener("keydown", e => e.key === "Escape" && closeAll());
@@ -225,6 +243,54 @@
   let tt; function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2400); }
   $("#newsletter").onsubmit = e => { e.preventDefault(); $("#nlMsg").textContent = T("thanks"); e.target.reset(); };
 
+  // ---------- auth ----------
+  let authMode = "login";
+  function renderAuthBtn() {
+    const u = AUTH.user(), label = u ? T("account") : T("login");
+    $("#loginBtn").textContent = label; $("#menuLogin").textContent = label;
+  }
+  function openAuth(mode) { authMode = mode || "login"; renderAuth(); openDrawer("auth"); setTimeout(() => { const i = $("#authBody input"); if (i) i.focus(); }, 350); }
+  function renderAuth() {
+    const u = AUTH.user(), body = $("#authBody");
+    if (u) {
+      $("#authTitle").textContent = T("account");
+      body.innerHTML = `<div class="auth-account"><p class="auth-hello">${esc(T("hello").replace("{n}", u.name || u.email))}</p><p class="muted">${esc(u.email)}</p>
+        <h5 class="auth-h">${T("myOrders")}</h5><p class="muted">${T("noOrders")}</p><button class="btn light" id="logoutBtn">${T("logout")}</button></div>`;
+      $("#logoutBtn").onclick = async () => { await AUTH.signOut(); authMode = "login"; renderAuth(); renderAuthBtn(); toast(T("loggedOut")); };
+      return;
+    }
+    const reg = authMode === "register", forgot = authMode === "forgot";
+    $("#authTitle").textContent = reg ? T("register") : forgot ? T("resetTitle") : T("login");
+    body.innerHTML = `<form class="auth-form" id="authForm" novalidate>
+        ${reg ? `<label>${T("name")}<input name="name" type="text" autocomplete="name"></label>` : ""}
+        <label>E-mail<input name="email" type="email" autocomplete="email" inputmode="email" required></label>
+        ${forgot ? "" : `<label>${T("password")}<input name="password" type="password" autocomplete="${reg ? "new-password" : "current-password"}" required></label>`}
+        <p class="auth-msg" id="authMsg" role="alert"></p>
+        <button class="btn" type="submit">${reg ? T("submitReg") : forgot ? T("submitReset") : T("submitLogin")}</button>
+      </form>
+      <div class="auth-alt">
+        ${forgot ? `<button class="linkbtn" data-am="login">${T("back")}</button>` :
+          reg ? `<span class="muted">${T("haveAcc")}</span><button class="btn light" data-am="login">${T("submitLogin")}</button>` :
+          `<button class="linkbtn" data-am="forgot">${T("forgot")}</button><span class="muted">${T("noAcc")}</span><button class="btn light" data-am="register">${T("register")}</button>`}
+      </div>
+      ${AUTH.demo ? `<p class="auth-note">${T("demoNote")}</p>` : ""}`;
+    $$("[data-am]", body).forEach(b => b.onclick = () => { authMode = b.dataset.am; renderAuth(); const i = $("#authBody input"); if (i) i.focus(); });
+    $("#authForm").onsubmit = async e => {
+      e.preventDefault();
+      const f = e.target, msg = $("#authMsg"), btn = $("button[type=submit]", f), v = n => (f.elements[n] ? f.elements[n].value : "");
+      msg.className = "auth-msg"; msg.textContent = ""; btn.disabled = true;
+      try {
+        if (forgot) { await AUTH.reset({ email: v("email") }); msg.className = "auth-msg ok"; msg.textContent = T("resetSent"); }
+        else {
+          if (reg) await AUTH.signUp({ email: v("email"), password: v("password"), name: v("name") });
+          else await AUTH.signIn({ email: v("email"), password: v("password") });
+          renderAuthBtn(); renderAuth(); toast(T(reg ? "created" : "loggedIn"));
+        }
+      } catch (err) { msg.textContent = T("e_" + (err.code || "net")); }
+      finally { btn.disabled = false; }
+    };
+  }
+
   // ---------- language ----------
   function applyLang(keepScroll) {
     document.documentElement.lang = lang === "uk" ? "uk" : "en";
@@ -235,6 +301,7 @@
     $("#menuList").innerHTML = C.categories.map(c => `<li><a href="#c-${c.id}">${esc(L(c.label))}</a></li>`).join("");
     $("#nlMsg").textContent = "";
     renderCart();
+    renderAuthBtn(); renderAuth();
     route(keepScroll);
     $("#searchInput").dispatchEvent(new Event("input"));
   }

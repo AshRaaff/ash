@@ -18,7 +18,7 @@
   <nav class="header-right">
     <button class="text-btn lang hide-m"><span data-setlang="en">EN</span> / <span data-setlang="uk">UA</span></button>
     <button class="text-btn" id="searchBtn" data-i18n="search">SEARCH</button>
-    <button class="text-btn hide-m" id="loginBtn" data-i18n="login">LOG IN</button>
+    <button class="text-btn hide-m" id="loginBtn">LOG IN</button>
     <button class="text-btn" id="cartBtn"><span data-i18n="bag">BAG</span> (<span id="cartCount">0</span>)</button>
   </nav>
 </header>
@@ -32,6 +32,7 @@
     <li><a href="#info-help" data-i18n="help">HELP</a></li>
     <li><a href="#info-shipping" data-i18n="shipRet">SHIPPING &amp; RETURNS</a></li>
     <li><a href="#info-contact" data-i18n="contact">CONTACT</a></li>
+    <li><button class="menu-link" id="menuLogin">LOG IN</button></li>
     <li class="lang-row"><span data-setlang="en">EN</span> <span data-setlang="uk">UA</span></li>
   </ul>
 </aside>
@@ -40,6 +41,11 @@
   <div class="drawer-head"><span data-i18n="bag">BAG</span><button class="close static" data-close aria-label="Close">✕</button></div>
   <div class="cart-body" id="cartBody"></div>
   <div class="cart-foot" id="cartFoot"></div>
+</aside>
+
+<aside class="drawer right" id="auth" aria-hidden="true">
+  <div class="drawer-head"><span id="authTitle">LOG IN</span><button class="close static" data-close aria-label="Close">✕</button></div>
+  <div class="cart-body" id="authBody"></div>
 </aside>
 
 <div class="search" id="search" aria-hidden="true">
@@ -79,6 +85,7 @@
 
 <script src="config.js"></script>
 <script src="products.js"></script>
+<script src="auth.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
