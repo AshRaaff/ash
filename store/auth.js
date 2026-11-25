@@ -42,6 +42,7 @@
       if (!u || (await sha(u.salt + password)) !== u.hash) throw fail("wrong");
       store.set("poi_session", email); return this.user();
     },
+    token() { return null; },
     async signOut() { store.del("poi_session"); },
     async reset({ email }) { check(clean(email), "", false); throw fail("resetDemo"); }
   };
@@ -81,6 +82,7 @@
       const j = await this.call("/token?grant_type=password", { email, password });
       store.set("poi_sb", { token: j.access_token, user: j.user }); return this.user();
     },
+    token() { const s = store.get("poi_sb", null); return s && s.token || null; },
     async signOut() {
       const s = store.get("poi_sb", null);
       if (s && s.token) { try { await this.call("/logout", {}, s.token); } catch {} }

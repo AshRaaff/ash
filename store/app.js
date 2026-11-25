@@ -1,5 +1,6 @@
 (() => {
-  const C = window.CONFIG, P = window.PRODUCTS;
+  const C = window.CONFIG;
+  let P = window.PRODUCTS || [];
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const money = n => n.toFixed(2) + " " + C.currency;
@@ -55,9 +56,10 @@
   try { const s = localStorage.getItem("lang"); lang = LANGS.includes(s) ? s : (navigator.language || "").toLowerCase().startsWith("uk") ? "uk" : "en"; } catch {}
   const T = k => (STR[lang] && STR[lang][k]) ?? STR.en[k] ?? k;
   const L = x => (x && typeof x === "object") ? (x[lang] ?? x.en) : x;
-  const pn = p => (lang === "uk" && UK[p.id] && UK[p.id].name) || p.name;
-  const pd = p => (lang === "uk" && UK[p.id] && UK[p.id].desc) || p.desc;
-  const pc = p => (lang === "uk" && UK[p.id] && UK[p.id].colors) || p.colors;
+  const uk = p => (p.uk && Object.keys(p.uk).length ? p.uk : UK[p.id]) || {};
+  const pn = p => (lang === "uk" && uk(p).name) || p.name;
+  const pd = p => (lang === "uk" && uk(p).desc) || p.desc;
+  const pc = p => (lang === "uk" && uk(p).colors && uk(p).colors.length ? uk(p).colors : p.colors) || [];
 
   // ---------- storage ----------
   const store = {
@@ -142,7 +144,7 @@
     const cat = C.categories.find(c => c.id === p.cat);
     let size = null;
     app.innerHTML = `<div class="product">
-      <div class="gallery">${[0, 1, 2, 3].map(i => media(p, i)).join("")}</div>
+      <div class="gallery">${Array.from({ length: p.images && p.images.length ? p.images.length : 4 }, (_, i) => media(p, i)).join("")}</div>
       <div class="pinfo">
         <div class="crumbs"><a href="#home">${T("home")}</a> / <a href="#c-${p.cat}">${esc(cat ? L(cat.label) : p.cat)}</a></div>
         <h1>${esc(pn(p))}</h1>
@@ -213,7 +215,7 @@
     $("#cartBody").innerHTML = rows.length ? rows.map(r => `<div class="cart-item">
       <a href="#p-${r.p.id}">${media(r.p, 0).replace('class="ph "', 'class="ph"')}</a>
       <div><h5>${esc(pn(r.p))} <span class="pr">${money(r.p.price * r.qty)}</span></h5>
-      <div class="meta">${esc(pc(r.p)[0])} · ${esc(r.size)}</div>
+      <div class="meta">${esc([pc(r.p)[0], r.size].filter(Boolean).join(" · "))}</div>
       <div class="qty"><button data-d="-1" data-i="${r.idx}" aria-label="Less">−</button><span>${r.qty}</span><button data-d="1" data-i="${r.idx}" aria-label="More">+</button></div>
       <button class="rm" data-rm="${r.idx}">${T("remove")}</button></div></div>`).join("")
       : `<div class="cart-empty">${T("empty")}</div>`;
@@ -315,5 +317,6 @@
   // ---------- init ----------
   $$(".sn").forEach(e => e.textContent = C.storeName);
   $("#year").textContent = "© " + new Date().getFullYear();
-  applyLang();
+  // товары берём из хранилища (демо: браузер / сервер: Supabase); пока грузим, показываем стартовые
+  DB.list().then(l => { P = l; }).catch(() => {}).finally(() => applyLang());
 })();

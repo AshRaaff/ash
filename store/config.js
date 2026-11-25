@@ -5,6 +5,7 @@ window.CONFIG = {
   currency: "RON",                // валюта
   freeShippingFrom: 250,          // бесплатная доставка от этой суммы
   email: "hello@example.com",
+  admins: [],                     // почты администраторов (для режима supabase), например ["you@mail.com"]
   auth: {                         // вход и регистрация
     provider: "local",            // "local" = демо в браузере; "supabase" = настоящие аккаунты
     supabaseUrl: "",              // https://xxxx.supabase.co
