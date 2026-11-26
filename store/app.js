@@ -37,14 +37,14 @@
   const AUTH_STR = {
     en: { account:"ACCOUNT", register:"REGISTER", resetTitle:"RESET PASSWORD", name:"Name", password:"Password", forgot:"Forgot password?", submitLogin:"LOG IN", submitReg:"CREATE ACCOUNT",
       submitReset:"SEND LINK", noAcc:"Don't have an account?", haveAcc:"Already have an account?", back:"Back to log in", logout:"LOG OUT", hello:"Hello, {n}",
-      myOrders:"MY ORDERS", noOrders:"You have no orders yet.", demoNote:"Demo mode: accounts are stored only in this browser and are not protected. Connect a server before real customers sign up.",
+      myOrders:"MY ORDERS", adminLink:"ADMIN PANEL", noOrders:"You have no orders yet.", demoNote:"Demo mode: accounts are stored only in this browser and are not protected. Connect a server before real customers sign up.",
       loggedIn:"WELCOME", loggedOut:"YOU HAVE LOGGED OUT", created:"ACCOUNT CREATED", resetSent:"If this e-mail exists, we sent a reset link.",
       e_badEmail:"Enter a valid e-mail.", e_shortPass:"Password must be at least 8 characters.", e_exists:"An account with this e-mail already exists.",
       e_wrong:"Wrong e-mail or password.", e_net:"Connection error. Please try again.", e_resetDemo:"Password reset is not available in demo mode.",
       e_confirmEmail:"Check your e-mail and confirm your account, then log in." },
     uk: { account:"АКАУНТ", register:"РЕЄСТРАЦІЯ", resetTitle:"СКИДАННЯ ПАРОЛЯ", name:"Ім'я", password:"Пароль", forgot:"Забули пароль?", submitLogin:"УВІЙТИ", submitReg:"СТВОРИТИ АКАУНТ",
       submitReset:"НАДІСЛАТИ ПОСИЛАННЯ", noAcc:"Ще немає акаунта?", haveAcc:"Вже є акаунт?", back:"Назад до входу", logout:"ВИЙТИ", hello:"Вітаємо, {n}",
-      myOrders:"МОЇ ЗАМОВЛЕННЯ", noOrders:"У вас ще немає замовлень.", demoNote:"Демо-режим: акаунти зберігаються лише в цьому браузері й не захищені. Підключіть сервер до того, як реєструватимуться справжні клієнти.",
+      myOrders:"МОЇ ЗАМОВЛЕННЯ", adminLink:"АДМІНПАНЕЛЬ", noOrders:"У вас ще немає замовлень.", demoNote:"Демо-режим: акаунти зберігаються лише в цьому браузері й не захищені. Підключіть сервер до того, як реєструватимуться справжні клієнти.",
       loggedIn:"ЛАСКАВО ПРОСИМО", loggedOut:"ВИ ВИЙШЛИ З АКАУНТА", created:"АКАУНТ СТВОРЕНО", resetSent:"Якщо така пошта існує, ми надіслали посилання для скидання.",
       e_badEmail:"Введіть коректну електронну адресу.", e_shortPass:"Пароль має містити щонайменше 8 символів.", e_exists:"Акаунт з такою поштою вже існує.",
       e_wrong:"Невірна пошта або пароль.", e_net:"Помилка з'єднання. Спробуйте ще раз.", e_resetDemo:"У демо-режимі скидання пароля недоступне.",
@@ -257,7 +257,7 @@
     if (u) {
       $("#authTitle").textContent = T("account");
       body.innerHTML = `<div class="auth-account"><p class="auth-hello">${esc(T("hello").replace("{n}", u.name || u.email))}</p><p class="muted">${esc(u.email)}</p>
-        <h5 class="auth-h">${T("myOrders")}</h5><p class="muted">${T("noOrders")}</p><button class="btn light" id="logoutBtn">${T("logout")}</button></div>`;
+        <h5 class="auth-h">${T("myOrders")}</h5><p class="muted">${T("noOrders")}</p>${(C.admins || []).map(x => String(x).toLowerCase()).includes(String(u.email).toLowerCase()) ? `<a class="btn" href="admin.html">${T("adminLink")}</a>` : ""}<button class="btn light" id="logoutBtn">${T("logout")}</button></div>`;
       $("#logoutBtn").onclick = async () => { await AUTH.signOut(); authMode = "login"; renderAuth(); renderAuthBtn(); toast(T("loggedOut")); };
       return;
     }

@@ -176,4 +176,5 @@ img{display:block;max-width:100%}
 .auth-note{font-size:11px;line-height:1.5;color:var(--muted);padding-top:14px;border-top:1px solid var(--line);margin-top:20px}
 .auth-hello{font-size:18px;margin:28px 0 4px}
 .auth-h{font-weight:400;font-size:11px;letter-spacing:.12em;margin:28px 0 8px}
-.auth-account .btn{margin-top:28px}
+.auth-account .btn{display:block;margin-top:12px}
+.auth-account .auth-h{margin-top:28px}
