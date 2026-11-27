@@ -74,6 +74,8 @@ form.f{display:grid;gap:18px;padding-top:16px}
 .img .main{position:absolute;left:4px;top:4px;background:#000;color:#fff;font-size:9px;letter-spacing:.08em;padding:2px 5px}
 .img .ctl{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;background:rgba(255,255,255,.92)}
 .img .ctl button{padding:4px 8px;font-size:13px}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0 0 0 0);pointer-events:none}
+.photo-btn{display:block;width:100%;padding:16px;font-size:12px}
 .add{display:grid;place-items:center;aspect-ratio:3/4;border:1px dashed #000;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-align:center;padding:6px}
 .add:hover{background:var(--soft)}
 .add input{display:none}

@@ -128,8 +128,10 @@
       <div class="panel-head"><span>${src ? "ИЗМЕНИТЬ ТОВАР" : "НОВЫЙ ТОВАР"}</span><button id="x" aria-label="Закрыть">✕</button></div>
       <div class="panel-body"><form class="f" id="pf" novalidate>
         <h3>Фото</h3>
+        <button type="button" class="btn photo-btn" id="pick">+ Добавить фото</button>
+        <input type="file" id="file" class="vh" accept="image/*" multiple>
         <div class="imgs" id="imgs"></div>
-        <p class="hint">Первое фото главное. Фото сжимаются до 1200 px. Если фото нет, в магазине будет цветная заглушка.</p>
+        <p class="hint">Нажмите кнопку и выберите фото из галереи или снимите на камеру. Первое фото главное. Фото сжимаются до 1200 px. Без фото в магазине будет цветная заглушка.</p>
         <h3>Название и описание</h3>
         <label>Название (English) *<input type="text" name="name" value="${v(p.name)}" placeholder="OVERSIZED LINEN BLAZER"></label>
         <label>Название (Українською)<input type="text" name="uname" value="${v(p.uk.name)}"></label>
@@ -158,21 +160,22 @@
     const imgsEl = $("#imgs");
     function drawImgs() {
       imgsEl.innerHTML = p.images.map((u, i) => `<div class="img" style="background-image:url('${esc(u)}')">${i === 0 ? '<span class="main">ГЛАВНОЕ</span>' : ""}
-        <div class="ctl"><button type="button" data-m="-1" data-i="${i}" aria-label="Левее">←</button><button type="button" data-d="${i}" aria-label="Удалить">✕</button><button type="button" data-m="1" data-i="${i}" aria-label="Правее">→</button></div></div>`).join("") +
-        `<label class="add" id="addlbl">+ Фото<input type="file" accept="image/*" multiple id="file"></label>`;
+        <div class="ctl"><button type="button" data-m="-1" data-i="${i}" aria-label="Левее">←</button><button type="button" data-d="${i}" aria-label="Удалить">✕</button><button type="button" data-m="1" data-i="${i}" aria-label="Правее">→</button></div></div>`).join("");
       $$("[data-m]", imgsEl).forEach(b => b.onclick = () => { const i = +b.dataset.i, j = i + +b.dataset.m; if (j < 0 || j >= p.images.length) return; [p.images[i], p.images[j]] = [p.images[j], p.images[i]]; drawImgs(); });
       $$("[data-d]", imgsEl).forEach(b => b.onclick = () => { p.images.splice(+b.dataset.d, 1); drawImgs(); });
-      $("#file").onchange = async e => {
-        const files = [...e.target.files]; if (!files.length) return;
-        const lbl = $("#addlbl"); lbl.firstChild.textContent = "Загрузка…";
-        for (const file of files) {
-          try { p.images.push(await DB.uploadImage(await toJpeg(file))); }
-          catch (er) { toast(er.code ? errText(er) : "НЕ УДАЛОСЬ ПРОЧИТАТЬ ФОТО"); if (er.code === "auth") break; }
-        }
-        drawImgs();
-      };
     }
     drawImgs();
+    const pick = $("#pick"), fileEl = $("#file");
+    pick.onclick = () => fileEl.click();
+    fileEl.onchange = async e => {
+      const files = [...e.target.files]; if (!files.length) return;
+      pick.disabled = true; pick.textContent = "Загрузка…";
+      for (const file of files) {
+        try { p.images.push(await DB.uploadImage(await toJpeg(file))); drawImgs(); }
+        catch (er) { toast(er.code ? errText(er) : "НЕ УДАЛОСЬ ПРОЧИТАТЬ ФОТО"); if (er.code === "auth") break; }
+      }
+      fileEl.value = ""; pick.disabled = false; pick.textContent = "+ Добавить фото";
+    };
 
     $("#save").onclick = async () => {
       const g = n => f.elements[n], err = $("#ferr"); err.textContent = "";
@@ -190,7 +193,7 @@
       catch (e) { err.textContent = errText(e); if (e.code === "auth") { await AUTH.signOut(); location.reload(); } }
       finally { btn.disabled = false; }
     };
-    setTimeout(() => f.elements.name.focus(), 350);
+    $(".panel-body").scrollTop = 0;
   }
 
   boot();
