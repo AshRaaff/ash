@@ -173,11 +173,19 @@
     app.innerHTML = `<div class="info-page"><h1>${t}</h1><p>${esc(txt.replace("{free}", money(C.freeShippingFrom)).replace("{mail}", C.email))}</p></div>`;
   }
 
+  let stale = false;   // после админки список товаров нужно перечитать
+  function adminFrame() {
+    stale = true;
+    setHeader(false);
+    app.innerHTML = `<iframe class="adminframe" src="admin.html" title="Admin"></iframe>`;
+  }
+
   // ---------- router ----------
   function route(keepScroll) {
     const h = location.hash.replace(/^#/, ""), i = h.indexOf("-"), a = i < 0 ? h : h.slice(0, i), b = i < 0 ? "" : h.slice(i + 1);
+    if (a !== "admin" && stale) { stale = false; DB.list().then(l => { P = l; }).catch(() => {}).finally(() => route(keepScroll)); return; }
     closeAll();
-    ({ p: () => product(b), c: () => catalog(b), info: () => info(b) }[a] || home)();
+    ({ p: () => product(b), c: () => catalog(b), info: () => info(b), admin: adminFrame }[a] || home)();
     if (keepScroll !== true) window.scrollTo(0, 0);
     onScroll();
   }
@@ -185,6 +193,7 @@
   function onScroll() { header.classList.toggle("scrolled", scrollY > window.innerHeight * .6 - 56 || !header.classList.contains("over")); }
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("hashchange", () => route());
+  addEventListener("message", e => { if (e.data === "poi-home") location.hash = "home"; });
 
   // ---------- drawers ----------
   const overlay = $("#overlay");

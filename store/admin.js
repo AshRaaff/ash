@@ -196,5 +196,8 @@
     $(".panel-body").scrollTop = 0;
   }
 
+  // внутри магазина (адрес …#admin) возвращаемся в него, не открывая вторую копию
+  $("#toShop").onclick = e => { if (window.parent !== window) { e.preventDefault(); window.parent.postMessage("poi-home", "*"); } };
+
   boot();
 })();
