@@ -16,6 +16,7 @@ window.CONFIG = {
     { id: "woman", label: { en: "WOMAN",  uk: "ЖІНКАМ" } },
     { id: "man",   label: { en: "MAN",    uk: "ЧОЛОВІКАМ" } },
     { id: "kids",  label: { en: "KIDS",   uk: "ДІТЯМ" } },
+    { id: "accessories", label: { en: "ACCESSORIES", uk: "АКСЕСУАРИ" } },
     { id: "sale",  label: { en: "SALE",   uk: "ЗНИЖКИ" } }
   ],
   // Картинки главной. Положите файлы в store/img/ и укажите путь, например "img/hero1.jpg".
@@ -26,6 +27,7 @@ window.CONFIG = {
   ],
   banners: [
     { img: "", tone: "#b9b2a6", title: { en: "KIDS", uk: "ДІТЯМ" }, sub: { en: "SPRING EDIT", uk: "ВЕСНЯНА ПІДБІРКА" }, link: "#c-kids" },
+    { img: "", tone: "#a89f8e", title: { en: "ACCESSORIES", uk: "АКСЕСУАРИ" }, sub: { en: "JEWELRY", uk: "БІЖУТЕРІЯ" }, link: "#c-accessories" },
     { img: "", tone: "#8f8a80", title: { en: "SALE", uk: "ЗНИЖКИ" }, sub: { en: "UP TO 50% OFF", uk: "ДО -50%" }, link: "#c-sale" }
   ]
 };

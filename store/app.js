@@ -75,19 +75,24 @@
     const f = v => Math.max(0, Math.min(255, v + amt));
     return "#" + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(f).map(v => v.toString(16).padStart(2, "0")).join("");
   }
-  function placeholder(tone, variant = 0) {
+  function placeholder(tone, variant = 0, cat = "") {
     const a = shade(tone, variant ? -14 : 10), b = shade(tone, variant ? 6 : -12);
     // simple garment silhouette so the grid looks like a catalog until real photos are added
     const body = "M50 14 L35 20 L18 32 L26 46 L34 41 L34 94 L66 94 L66 41 L74 46 L82 32 L65 20 Q50 30 35 20";
+    const dark = shade(tone, -34);
+    // бижутерия: кольцо с камнем вместо футболки
+    const shape = cat === "accessories"
+      ? `<g transform="translate(0 ${variant ? 4 : 8})" fill="none" stroke="${dark}" stroke-width="6" opacity=".38"><circle cx="50" cy="72" r="24"/><path d="M42 44 L50 36 L58 44 L50 52 Z" fill="${dark}" stroke="none"/></g>`
+      : `<g transform="translate(0 ${variant ? 8 : 12}) scale(1)" fill="${dark}" opacity=".35"><path d="${body}"/></g>`;
     return `<svg viewBox="0 0 100 133" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs><linearGradient id="g${variant}${tone.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>
       <rect width="100" height="133" fill="url(#g${variant}${tone.slice(1)})"/>
-      <g transform="translate(0 ${variant ? 8 : 12}) scale(1)" fill="${shade(tone, -34)}" opacity=".35"><path d="${body}"/></g></svg>`;
+      ${shape}</svg>`;
   }
   function media(p, i = 0, cls = "") {
     const src = p.images && p.images[i];
     return src ? `<div class="ph ${cls}" style="background-image:url('${esc(src)}')"></div>`
-               : `<div class="ph ${cls}">${placeholder(p.tone, i % 2)}</div>`;
+               : `<div class="ph ${cls}">${placeholder(p.tone, i % 2, p.cat)}</div>`;
   }
 
   // ---------- cards ----------
@@ -101,7 +106,7 @@
   }
   function innerMedia(p, i) {
     const src = p.images && p.images[i];
-    return src ? `<div style="position:absolute;inset:0;background:url('${esc(src)}') center/cover"></div>` : placeholder(p.tone, i % 2);
+    return src ? `<div style="position:absolute;inset:0;background:url('${esc(src)}') center/cover"></div>` : placeholder(p.tone, i % 2, p.cat);
   }
   const tile = (t, cls = "") => `<a class="tile ${cls}" href="${t.link}">
     <div class="bg" style="background-color:${t.tone};${t.img ? `background-image:url('${esc(t.img)}')` : `background-image:linear-gradient(180deg,rgba(255,255,255,.08),rgba(0,0,0,.28))`}"></div>
@@ -117,7 +122,7 @@
       <section class="hero">${C.hero.map(t => tile(t)).join("")}</section>
       <div class="section-title"><span>${T("newIn")}</span><a href="#c-new">${T("viewAll")}</a></div>
       <section class="grid">${featured.map(card).join("")}</section>
-      <section class="banners" style="margin-top:56px">${C.banners.map(t => tile(t)).join("")}</section>`;
+      <section class="banners" style="margin-top:56px;--n:${C.banners.length}">${C.banners.map(t => tile(t)).join("")}</section>`;
   }
 
   function catalog(id = "new") {
@@ -142,7 +147,7 @@
     const p = P.find(x => x.id == id);
     if (!p) return catalog("new");
     const cat = C.categories.find(c => c.id === p.cat);
-    let size = null;
+    let size = p.sizes && p.sizes.length === 1 ? p.sizes[0] : null;   // один размер выбирается сам
     app.innerHTML = `<div class="product">
       <div class="gallery">${Array.from({ length: p.images && p.images.length ? p.images.length : 4 }, (_, i) => media(p, i)).join("")}</div>
       <div class="pinfo">
@@ -152,7 +157,7 @@
         <p class="desc">${esc(pd(p))}</p>
         <div class="color">${esc(pc(p).join(" | "))}</div>
         <div><div class="muted" style="margin-bottom:8px">${T("selectSize")}</div>
-        <div class="sizes">${p.sizes.map(s => `<button data-s="${esc(s)}">${esc(s)}</button>`).join("")}</div></div>
+        <div class="sizes">${p.sizes.map(s => `<button data-s="${esc(s)}" class="${size === s ? "sel" : ""}">${esc(s)}</button>`).join("")}</div></div>
         <button class="btn" id="add">${T("add")}</button>
         <div class="shipinfo">${T("shipNote").replace("{free}", money(C.freeShippingFrom))}</div>
       </div></div>`;
@@ -245,7 +250,7 @@
   // ---------- search ----------
   $("#searchInput").addEventListener("input", e => {
     const q = e.target.value.trim().toLowerCase();
-    const res = q ? P.filter(p => (pn(p) + " " + p.name + " " + p.cat + " " + pc(p).join(" ")).toLowerCase().includes(q)) : [];
+    const res = q ? P.filter(p => (pn(p) + " " + p.name + " " + p.cat + " " + L((C.categories.find(c => c.id === p.cat) || {}).label || "") + " " + pc(p).join(" ")).toLowerCase().includes(q)) : [];
     $("#searchResults").innerHTML = q && !res.length ? `<div class="empty" style="grid-column:1/-1">${T("noResults")}</div>` : res.map(card).join("");
   });
   $("#searchResults").addEventListener("click", e => e.target.closest("a") && closeAll());

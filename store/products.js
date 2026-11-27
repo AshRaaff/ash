@@ -1,5 +1,5 @@
 // ====== ТОВАРЫ — меняйте/добавляйте здесь ======
-// cat: woman | man | kids ; flags: isNew, oldPrice (для sale)
+// cat: woman | man | kids | accessories ; flags: isNew, oldPrice (для sale)
 // images: массив путей к фото, например ["img/p1-a.jpg","img/p1-b.jpg"]. Пусто = плейсхолдер.
 const CLOTHES = ["XS","S","M","L","XL"];
 window.PRODUCTS = [
@@ -18,6 +18,12 @@ window.PRODUCTS = [
   { id:13, name:"PLEATED MINI SKIRT",       price:109, oldPrice:159, cat:"woman",  tone:"#3a3a3c", colors:["Black"],         sizes:CLOTHES, desc:"Mini skirt with a high waist and pleated detail." },
   { id:14, name:"RELAXED CARGO TROUSERS",   price:189, cat:"man",                tone:"#8b8570", colors:["Khaki"],         sizes:["38","40","42","44","46"], desc:"Relaxed-fit trousers with side pockets and an elastic waist with drawstring." },
   { id:15, name:"BOMBER JACKET",            price:249, oldPrice:349, cat:"man",    tone:"#2e3a32", colors:["Dark green"],    sizes:["S","M","L","XL","XXL"], desc:"Bomber jacket with a ribbed collar, zip closure and side pockets." },
+  { id:17, name:"GOLD-TONE HOOP EARRINGS",     price:79, cat:"accessories", isNew:true, tone:"#d8c48a", colors:["Gold","Silver"], sizes:["ONE SIZE"], desc:"Chunky hoop earrings in a gold-tone finish." },
+  { id:18, name:"LAYERED CHAIN NECKLACE",      price:99, cat:"accessories", isNew:true, tone:"#cfc3a6", colors:["Gold"], sizes:["ONE SIZE"], desc:"Layered chain necklace with a lobster clasp." },
+  { id:19, name:"PEARL BEAD BRACELET",         price:69, oldPrice:99, cat:"accessories", tone:"#e6e0d2", colors:["Ivory"], sizes:["ONE SIZE"], desc:"Elastic bracelet with imitation pearl beads." },
+  { id:20, name:"POLISHED RING SET",           price:59, cat:"accessories", isNew:true, tone:"#bfb7a8", colors:["Silver"], sizes:["15","16","17","18","19"], desc:"Set of three rings in a polished metal finish." },
+  { id:21, name:"MINIMAL STUD EARRINGS SET",   price:49, cat:"accessories", tone:"#d6cfc2", colors:["Gold","Silver"], sizes:["ONE SIZE"], desc:"Set of six minimalist stud earrings." },
+  { id:22, name:"CHUNKY LINK BRACELET",        price:89, cat:"accessories", tone:"#c9c2b4", colors:["Silver"], sizes:["ONE SIZE"], desc:"Chunky link bracelet with a toggle clasp." },
   { id:16, name:"CROPPED CARDIGAN",         price:139, cat:"woman",              tone:"#d9c9c4", colors:["Pink"],          sizes:CLOTHES, desc:"Cropped knit cardigan with a V-neckline and button closure." }
 ];
 
@@ -38,5 +44,11 @@ window.PRODUCTS_UK = {
   13: { name:"ПЛІСЕРОВАНА МІНІ-СПІДНИЦЯ", desc:"Міні-спідниця з високою посадкою та плісированими складками.", colors:["Чорний"] },
   14: { name:"ШТАНИ КАРГО ВІЛЬНОГО КРОЮ", desc:"Штани вільного крою з бічними кишенями та еластичним поясом зі шнурком.", colors:["Хакі"] },
   15: { name:"БОМБЕР", desc:"Бомбер із трикотажним коміром, застібкою на блискавку та бічними кишенями.", colors:["Темно-зелений"] },
+  17: { name:"ЗОЛОТИСТІ СЕРЕЖКИ-КІЛЬЦЯ", desc:"Об'ємні сережки-кільця із золотистим покриттям.", colors:["Золотий","Срібний"] },
+  18: { name:"БАГАТОШАРОВЕ КОЛЬЄ З ЛАНЦЮЖКІВ", desc:"Багатошарове кольє з ланцюжків із карабіном.", colors:["Золотий"] },
+  19: { name:"БРАСЛЕТ З ІМІТАЦІЄЮ ПЕРЛІВ", desc:"Еластичний браслет із намистинами з імітацією перлів.", colors:["Молочний"] },
+  20: { name:"НАБІР ПОЛІРОВАНИХ ПЕРСНІВ", desc:"Набір із трьох перснів із полірованого металу.", colors:["Срібний"] },
+  21: { name:"НАБІР СЕРЕЖОК-ГВОЗДИКІВ", desc:"Набір із шести мінімалістичних сережок-гвоздиків.", colors:["Золотий","Срібний"] },
+  22: { name:"МАСИВНИЙ БРАСЛЕТ-ЛАНЦЮГ", desc:"Масивний браслет-ланцюг із застібкою-тоглом.", colors:["Срібний"] },
   16: { name:"УКОРОЧЕНИЙ КАРДИГАН", desc:"Укорочений трикотажний кардиган з V-подібним вирізом та застібкою на гудзики.", colors:["Рожевий"] }
 };

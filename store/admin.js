@@ -5,9 +5,9 @@
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const money = n => Number(n).toFixed(2) + " " + C.currency;
   const csv = s => String(s || "").split(",").map(x => x.trim()).filter(Boolean);
-  const CATS = [["woman", "Женское (Woman)"], ["man", "Мужское (Man)"], ["kids", "Детское (Kids)"]];
-  const CAT_NAME = { woman: "Женское", man: "Мужское", kids: "Детское" };
-  const SIZES = [["XS–XL", "XS,S,M,L,XL"], ["S–XXL", "S,M,L,XL,XXL"], ["34–42", "34,36,38,40,42"], ["38–46", "38,40,42,44,46"], ["Дети", "2-3,4-5,6-7,8-9"], ["Один размер", "ONE SIZE"]];
+  const CATS = [["woman", "Женское (Woman)"], ["man", "Мужское (Man)"], ["kids", "Детское (Kids)"], ["accessories", "Аксессуары, бижутерия (Accessories)"]];
+  const CAT_NAME = { woman: "Женское", man: "Мужское", kids: "Детское", accessories: "Аксессуары" };
+  const SIZES = [["XS–XL", "XS,S,M,L,XL"], ["S–XXL", "S,M,L,XL,XXL"], ["34–42", "34,36,38,40,42"], ["38–46", "38,40,42,44,46"], ["Дети", "2-3,4-5,6-7,8-9"], ["Один размер", "ONE SIZE"], ["Кольца 15–19", "15,16,17,18,19"]];
   const ERR = { net: "Нет связи с сервером. Попробуйте ещё раз.", auth: "Сессия истекла или нет прав. Войдите заново.", server: "Ошибка сервера.", quota: "Память браузера заполнена: удалите лишние фото или товары.", read: "Не удалось прочитать файл." };
   const root = $("#root"), panel = $("#panel"), shade = $("#shade");
   let products = [];

@@ -68,7 +68,7 @@ img{display:block;max-width:100%}
 .tile .cap small{font-size:11px;letter-spacing:.14em}
 .tile .cap b{font-weight:400;font-size:clamp(26px,4vw,52px);letter-spacing:.06em;line-height:1}
 .tile .cap u{font-size:11px;text-underline-offset:4px;letter-spacing:.1em}
-.banners{display:grid;grid-template-columns:1fr 1fr;height:80vh;min-height:420px}
+.banners{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));height:80vh;min-height:420px}
 .section-title{padding:56px var(--pad) 20px;display:flex;justify-content:space-between;align-items:baseline;font-size:12px}
 .section-title a{text-decoration:underline;text-underline-offset:4px}
 
